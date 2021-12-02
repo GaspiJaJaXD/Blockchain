@@ -70,6 +70,8 @@ class Blockchain:
 
 # Crear una Aplicación Web, basada en Flask 
 app = Flask(__name__)
+# si se obtiene un Error 500 el ejecutar, actualziar Flask , reiniciar spyder y ejecutar la siguiente linea  
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 # Crear una Blockchain 
 blockchain = Blockchain()
@@ -96,3 +98,16 @@ def get_chain():
                 'length': len(blockchain.chain)}
     return jsonify(response), 200 
 
+# Tarea 
+@app.route('/is_valid', methods=['GET'])
+def is_valid():
+    chain = blockchain.chain
+    if blockchain.is_chain_valid(chain) == True:
+        response = {'message': 'la cadena es correcta'}
+    else:
+        response = {'message': 'la cadena no es valida'}
+    
+    return jsonify(response), 200
+            
+# Ejecutar la app
+app.run(host= '0.0.0.0', port= 5000)
