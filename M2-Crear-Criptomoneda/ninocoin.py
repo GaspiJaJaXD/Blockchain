@@ -25,6 +25,7 @@ class Blockchain:
         self.chain = []
         self.transactions = []
         self.create_block(proof = 1, previous_hash = "0" )
+        self.node = set()
         
         
     def create_block(self, proof, previous_hash):
@@ -77,7 +78,11 @@ class Blockchain:
                                   'reciever': receiver,
                                   'amount' : amount})
         previous_block = self.previous_block()
-        return previous_block['index'] + 1        
+        return previous_block['index'] + 1   
+
+    def add_node(self, address):
+        parsed_url = urlparse(adress)
+        self.node.add(parsed_url.netloc)
           
 # Parte 2 - Minado de un Bloque de la Cadena
 
