@@ -110,6 +110,10 @@ app = Flask(__name__)
 # si se obtiene un Error 500 el ejecutar, actualziar Flask , reiniciar spyder y ejecutar la siguiente linea  
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
+#Crear la dirección del Nodo en el Puerto 5000
+node_addres = str(uuid4()).replace('-', '')
+
+
 # Crear una Blockchain 
 blockchain = Blockchain()
 
@@ -120,12 +124,15 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
+    blockchain.add_transaction(sender = node_addres, receiver = "Gaspar", amount = 10 )
     block = blockchain.create_block(proof, previous_hash)
     response = {'message' : 'felicidades por minar el Bloque!!',
                 'index' : block['index'],
                 'timestamp' : block['timestamp'],
                 'proof' : block['proof'],
-                'previous_hash' : block['previous_hash']}
+                'previous_hash' : block['previous_hash'],
+                'transactions' : block['transactions']}
+    
     return jsonify(response), 200 
 
 # Obtener la Blockchain
@@ -145,6 +152,17 @@ def is_valid():
         response = {'message': 'la cadena no es valida'}
     
     return jsonify(response), 200
+
+# añadir una nueva transacción a la Cadena de BLoques
+@app.route('/add_transaction', methods = ['POST'])
+def add_transaction():
+    json = request.get_json()
+    transactions_keys = ['sender','receiver','amount']
+    if not all(key in json for key in transactions_keys):
+        return 'Faltan elementos de la transacción', 400
+    index = blockchain.add_transaction(json['sender'], json['receiver'], json['amount'])
+    response = {'message': f'La transacción sera añadida al bloque {index}',}
+    return jsonify(response), 201
          
 # Parte 3 - Descentralizar la Cadena de Bloques
     
