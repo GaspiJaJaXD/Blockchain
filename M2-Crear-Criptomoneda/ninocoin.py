@@ -142,7 +142,7 @@ def get_chain():
                 'length': len(blockchain.chain)}
     return jsonify(response), 200 
 
-# Tarea 
+# Comprobar si la cadena de bloques es válida 
 @app.route('/is_valid', methods=['GET'])
 def is_valid():
     chain = blockchain.chain
@@ -165,7 +165,32 @@ def add_transaction():
     return jsonify(response), 201
          
 # Parte 3 - Descentralizar la Cadena de Bloques
-    
+
+# Conectar nuevos Nodos
+@app.route('/connect_node', methods = ['POST'])
+def connect_node():
+    json = request.get_json()
+    nodes = json.get('nodes')
+    if nodes is None:
+        return 'No hay nodos para añadir', 400
+    for node in nodes:
+        blockchain.add_node(node)
+    response = {'message' : 'Todos los nodos han sido conectados, la cadena NinoCoins contiene ahora los siguiente nodos',
+                'total_nodes': list(blockchain.nodes)}
+    return jsonify(response), 201
+
+# reemplzar la cadena por las mas larga, de ser necesario
+@app.route('/replace_chain', methods = ['GET'])
+def replace_chain():
+    is_chain_replace = blockchain.replace_chain()
+    if is_chain_replace():
+        response = {'message' : 'Los Nodos tenian diferentes cadenas y han sido reemplazadas por la mas larga',
+                    'new_chain' : blockchain.chain}
+    else:
+        response = {'message' : 'la cadena en todos los Nodos es la mas larga',
+                    'actual_chain' : blockchain.chain }
+    return jsonify(response), 200
+        
 
 # Ejecutar la app
 app.run(host= '0.0.0.0', port= 5000)
