@@ -77,7 +77,7 @@ class Blockchain:
         self.transactions.append({'sender': sender, 
                                   'reciever': receiver,
                                   'amount' : amount})
-        previous_block = self.previous_block()
+        previous_block = self.get_previous_block()
         return previous_block['index'] + 1   
 
     def add_node(self, address):
@@ -124,7 +124,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender = node_addres, receiver = "Hadelin", amount = 10 )
+    blockchain.add_transaction(sender = node_addres, receiver = "Gaspi", amount = 10 )
     block = blockchain.create_block(proof, previous_hash)
     response = {'message' : 'felicidades por minar el Bloque!!',
                 'index' : block['index'],
