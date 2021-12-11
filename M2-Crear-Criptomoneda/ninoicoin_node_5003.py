@@ -183,7 +183,7 @@ def connect_node():
 @app.route('/replace_chain', methods = ['GET'])
 def replace_chain():
     is_chain_replace = blockchain.replace_chain()
-    if is_chain_replace():
+    if is_chain_replace:
         response = {'message' : 'Los Nodos tenian diferentes cadenas y han sido reemplazadas por la mas larga',
                     'new_chain' : blockchain.chain}
     else:
@@ -193,4 +193,4 @@ def replace_chain():
         
 
 # Ejecutar la app
-app.run(host= '0.0.0.0', port= 5003)
+app.run(host= '127.0.0.1', port= 5003)
